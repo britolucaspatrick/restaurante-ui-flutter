@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_ui_kit/model/categoria.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/screens/categories_screen.dart';
 import 'package:restaurant_ui_kit/screens/dishes.dart';
 import 'package:restaurant_ui_kit/widgets/grid_product.dart';
 import 'package:restaurant_ui_kit/widgets/home_category.dart';
 import 'package:restaurant_ui_kit/widgets/slider_item.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class Home extends StatefulWidget {
@@ -17,6 +17,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
   List<Categoria> categories = new List<Categoria>();
+  List<Produto> produtos = new List<Produto>();
   bool possuiServico = false;
 
   List<T> map<T>(List list, Function handler) {
@@ -34,6 +35,28 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
   void initState() {
     super.initState();
     getCategorias();
+    getProdutos();
+  }
+
+  getProdutos() async{
+    try {
+      produtos.clear();
+      await Firestore.instance
+          .collection("produtos")
+          .where('isOferta', isEqualTo: true)
+          .getDocuments()
+          .then((querySnapshot) {
+        querySnapshot.documents.forEach((f) {
+          setState(() {
+            f.data["documentID"] = f.documentID;
+            produtos.add(Produto.fromJson(f.data));
+            print(produtos);
+          });
+        });
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {}
+    }
   }
 
   getCategorias() async {
@@ -98,16 +121,16 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
               ],
             ),
             SizedBox(height: 10.0),
+            produtos.length > 0 ?
             CarouselSlider(
               height: MediaQuery.of(context).size.height/2.4,
               items: map<Widget>(
-                foods,
+                produtos,
                     (index, i){
-                      Map food = foods[index];
                   return SliderItem(
-                    img: food['img'],
+                    img: produtos[index].url_imagem,
                     isFav: false,
-                    name: food['name'],
+                    name: produtos[index].nome,
                     rating: 5.0,
                     raters: 23,
                   );
@@ -122,9 +145,9 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
                   _current = index;
                 });
               },
-            ),
+            ) :
+            CircularProgressIndicator(),
             SizedBox(height: 20.0),
-
             Text(
               "Categorias",
               style: TextStyle(
@@ -200,16 +223,12 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
                 childAspectRatio: MediaQuery.of(context).size.width /
                     (MediaQuery.of(context).size.height / 1.25),
               ),
-              itemCount: foods == null ? 0 :foods.length,
+              itemCount: produtos == null ? 0 : produtos.length,
               itemBuilder: (BuildContext context, int index) {
-//                Food food = Food.fromJson(foods[index]);
-                Map food = foods[index];
-//                print(foods);
-//                print(foods.length);
                 return GridProduct(
-                  img: food['img'],
+                  img: produtos[index].url_imagem,
                   isFav: false,
-                  name: food['name'],
+                  name: produtos[index].nome,
                   rating: 5.0,
                   raters: 23,
                 );

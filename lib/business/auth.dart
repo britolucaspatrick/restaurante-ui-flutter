@@ -1,10 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:restaurant_ui_kit/model/pessoa.dart';
 
 enum authProblems { UserNotFound, PasswordNotValid, NetworkError, UnknownError }
 
 class Auth {
+
+  static void addUser(Pessoa user) async {
+    print(user.userID);
+    checkUserExist(user.userID).then((value) {
+      if (!value) {
+        Firestore.instance
+            .document("pessoas/${user.userID}")
+            .setData(user.toJson());
+      } else {
+        //update
+        Firestore.instance
+            .document('pessoas/${user.userID}')
+            .updateData(user.toJson());
+      }
+    });
+  }
+
+  static Future<bool> checkUserExist(String userID) async {
+    bool exists = false;
+    try {
+      await Firestore.instance.document("pessoas/$userID").get().then((doc) {
+        if (doc.exists)
+          exists = true;
+        else
+          exists = false;
+      });
+      return exists;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Stream<Pessoa> getUser(String userID) {
+    return Firestore.instance
+        .collection("pessoas")
+        .where("userID", isEqualTo: userID)
+        .snapshots()
+        .map((QuerySnapshot snapshot) {
+      return snapshot.documents.map((doc) {
+        return Pessoa.fromDocument(doc);
+      }).first;
+    });
+  }
 
   static Future<String> signIn(String email, String password) async {
     AuthResult user = await FirebaseAuth.instance

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restaurant_ui_kit/business/PessoaBusiness.dart';
 import 'package:restaurant_ui_kit/business/auth.dart';
+import 'package:restaurant_ui_kit/model/pessoa.dart';
 import 'package:restaurant_ui_kit/screens/loginpage.dart';
 import 'package:restaurant_ui_kit/screens/main_screen.dart';
 import 'package:restaurant_ui_kit/widgets/alert.dart';
@@ -43,17 +45,31 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  void _signUp(
+      {String fullname,
+        String cpf,
+        String email,
+        String password,
+        BuildContext context}) async {
+      try {
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        await Auth.signUp(email, password).then((uID) {
+          Auth.addUser(new Pessoa(
+              userID: uID,
+              nome: fullname,
+              cpf: cpf));
+        });
+      } catch (e) {
+        print("Error in sign up: $e");
+        String exception = Auth.getExceptionText(e);
+        Alert.showAlertDialog(context, exception, 0);
+      }
+  }
+
   Widget _submitButton() {
     return GestureDetector(
       onTap: (){
-        Auth.signUp(email.text, senha.text)
-            .then((value){
-          PessoaBusiness.addPessoa(value, nome.text.toUpperCase(), cpf.text);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
-        }).catchError((error){
-          String exception = Auth.getExceptionText(error);
-          Alert.showAlertDialog(context, exception.toString(), 0);
-        });
+        _signUp(fullname: nome.text, cpf: cpf.text, email: email.text, password: senha.text, context: context);
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

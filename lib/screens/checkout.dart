@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
+import 'package:restaurant_ui_kit/model/carrinhoUser.dart';
 import 'package:restaurant_ui_kit/widgets/cart_item.dart';
 
 class Checkout extends StatefulWidget {
@@ -9,14 +8,12 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
-
+  CarrinhoUser carrinho = new CarrinhoUser();
   final TextEditingController _couponlControl = new TextEditingController();
-
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -128,16 +125,12 @@ class _CheckoutState extends State<Checkout> {
             ListView.builder(
               primary: false,
               shrinkWrap: true,
-              itemCount: foods == null ? 0 :foods.length,
+              itemCount: carrinho.prodCarrinho == null ? 0 :carrinho.prodCarrinho.length,
               itemBuilder: (BuildContext context, int index) {
-//                Food food = Food.fromJson(foods[index]);
-                Map food = foods[index];
-//                print(foods);
-//                print(foods.length);
                 return CartItem(
-                  img: food['img'],
+                  img: carrinho.prodCarrinho[index].url_imagem,
                   isFav: false,
-                  name: food['name'],
+                  name: carrinho.prodCarrinho[index].nome,
                   rating: 5.0,
                   raters: 23,
                 );

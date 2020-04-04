@@ -3,14 +3,12 @@ import 'package:restaurant_ui_kit/screens/details.dart';
 import 'package:restaurant_ui_kit/util/const.dart';
 import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
 
-
 class CartItem extends StatelessWidget {
   final String name;
   final String img;
   final bool isFav;
   final double rating;
   final int raters;
-
 
   CartItem({
     Key key,
@@ -43,7 +41,7 @@ class CartItem extends StatelessWidget {
                 width: MediaQuery.of(context).size.width/3,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(
+                  child: Image.network(
                     "$img",
                     fit: BoxFit.cover,
                   ),

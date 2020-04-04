@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 );
               },
-              tooltip: "Notifications",
+              tooltip: "Notificações",
             ),
           ],
         ),

@@ -3,17 +3,17 @@ import 'package:restaurant_ui_kit/model/pessoa.dart';
 
 class PessoaBusiness{
 
-  static Stream<Pessoa> getPessoa(String id) {
+/*  static Stream<Pessoa> getPessoa(String id) {
     Firestore.instance
         .collection("pessoas")
-        .where('userID', isEqualTo: id)
+        //.where('userID', isEqualTo: id)
         .snapshots()
         .map((QuerySnapshot snapshot) {
       snapshot.documents.map((doc) {
         return Pessoa.fromDocument(doc);
-      });
+      }).first;
     });
-  }
+  }*/
 
   static Future<bool> checkPessoaExist(String id) async {
     bool exists = false;
@@ -31,14 +31,14 @@ class PessoaBusiness{
   }
 
   static void addPessoa(String id, String name, String cpf) async {
-    Pessoa pessoa = Pessoa(nome: name, cpf: int.parse(cpf.replaceAll('.', '').replaceAll('-', '')));
+    print(id);
+    Pessoa pessoa = Pessoa(userID: id, nome: name, cpf: cpf);
 
     checkPessoaExist(id).then((value) {
       if (!value) {
         Firestore.instance.collection("pessoas").add(pessoa.toJson()).then((ref){
           pessoa.userID = ref.documentID;
           Firestore.instance.collection("pessoas").document(ref.documentID).updateData(pessoa.toJson());
-
         });
       } else {
         Firestore.instance.document('pessoas/${id}').updateData(pessoa.toJson());

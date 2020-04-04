@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Pessoa {
   String nome;
-  int cpf;
+  String cpf;
   String logradouro;
   String bairro;
   String numero;
@@ -15,18 +15,18 @@ class Pessoa {
   String userID;
 
   Pessoa({
-    this.nome,
-    this.cpf,
-    this.logradouro,
-    this.bairro,
-    this.numero,
-    this.cidade,
-    this.estado,
-    this.complemento,
-    this.cep,
-    this.url_perfil,
-    this.telefone,
-    this.userID
+    this.nome = '',
+    this.cpf = '',
+    this.logradouro = '',
+    this.bairro = '',
+    this.numero = '',
+    this.cidade = '',
+    this.estado = '',
+    this.complemento = '',
+    this.cep = '',
+    this.url_perfil = '',
+    this.telefone = '',
+    this.userID = ''
   });
 
   Map<String, Object> toJson() {

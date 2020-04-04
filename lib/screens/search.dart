@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/util/const.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
 import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
-
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -11,6 +12,33 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClientMixin<SearchScreen>{
   final TextEditingController _searchControl = new TextEditingController();
+  List<Produto> produtos = new List<Produto>();
+
+  @override
+  void initState() {
+    super.initState();
+    getProdutos();
+  }
+
+  getProdutos() async{
+    try {
+      produtos.clear();
+      await Firestore.instance
+          .collection("produtos")
+          .getDocuments()
+          .then((querySnapshot) {
+        querySnapshot.documents.forEach((f) {
+          setState(() {
+            f.data["documentID"] = f.documentID;
+            produtos.add(Produto.fromJson(f.data));
+            print(produtos);
+          });
+        });
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {}
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +106,11 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
             shrinkWrap: true,
             primary: false,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: foods == null ? 0 :foods.length,
+            itemCount: produtos == null ? 0 : produtos.length,
             itemBuilder: (BuildContext context, int index) {
-              Map food = foods[index];
               return ListTile(
                 title: Text(
-                  "${food['name']}",
+                  "${produtos[index].nome}",
                   style: TextStyle(
 //                    fontSize: 15,
                     fontWeight: FontWeight.w900,
@@ -92,10 +119,10 @@ class _SearchScreenState extends State<SearchScreen> with AutomaticKeepAliveClie
                 leading: CircleAvatar(
                   radius: 25.0,
                   backgroundImage: AssetImage(
-                    "${food['img']}",
+                    "${produtos[index].url_imagem}",
                   ),
                 ),
-                trailing: Text(r"$10"),
+                trailing: Text(r"R$ " + produtos[index].vl_unitario.toString().replaceAll('.', ',')),
                 subtitle:  Row(
                   children: <Widget>[
                     SmoothStarRating(

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_ui_kit/model/avaliacoesProduto.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/screens/notifications.dart';
-import 'package:restaurant_ui_kit/util/comments.dart';
 import 'package:restaurant_ui_kit/util/const.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
 import 'package:restaurant_ui_kit/widgets/badge.dart';
 import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
 
 class ProductDetails extends StatefulWidget {
+  Produto produto;
+
+  ProductDetails({Key key, this.produto}) : super(key: key);
+
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  bool isFav = false;
+  List<AvaliacoesProduto> comments = new List<AvaliacoesProduto>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,8 +65,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                   width: MediaQuery.of(context).size.width,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      "${foods[1]['img']}",
+                    child: Image.network(
+                      widget.produto.url_imagem,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -78,7 +83,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(
-                        isFav
+                        widget.produto.isFav
                             ?Icons.favorite
                             :Icons.favorite_border,
                         color: Colors.red,
@@ -93,7 +98,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             SizedBox(height: 10.0),
 
             Text(
-              "${foods[1]['name']}",
+              widget.produto.nome,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -109,13 +114,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     starCount: 5,
                     color: Constants.ratingBG,
                     allowHalfRating: true,
-                    rating: 5.0,
+                    rating: widget.produto.rating,
                     size: 10.0,
                   ),
                   SizedBox(width: 10.0),
 
                   Text(
-                    "5.0 (23 Reviews)",
+                    '${widget.produto.rating}',
                     style: TextStyle(
                       fontSize: 11.0,
                     ),
@@ -131,7 +136,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: Row(
                 children: <Widget>[
                   Text(
-                    "20 Pieces",
+                    "Quantidade mínima: ${widget.produto.qt_minimalsell}",
                     style: TextStyle(
                       fontSize: 11.0,
                       fontWeight: FontWeight.w300,
@@ -140,7 +145,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(width: 10.0),
 
                   Text(
-                    r"$90",
+                    r"R$ " + widget.produto.vl_unitario.toString().replaceAll('.', ','),
                     style: TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.w900,
@@ -167,17 +172,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             SizedBox(height: 10.0),
 
             Text(
-              "Nulla quis lorem ut libero malesuada feugiat. Lorem ipsum dolor "
-                  "sit amet, consectetur adipiscing elit. Curabitur aliquet quam "
-                  "id dui posuere blandit. Pellentesque in ipsum id orci porta "
-                  "dapibus. Vestibulum ante ipsum primis in faucibus orci luctus "
-                  "et ultrices posuere cubilia Curae; Donec velit neque, auctor "
-                  "sit amet aliquam vel, ullamcorper sit amet ligula. Donec"
-                  " rutrum congue leo eget malesuada. Vivamus magna justo,"
-                  " lacinia eget consectetur sed, convallis at tellus."
-                  " Vivamus suscipit tortor eget felis porttitor volutpat."
-                  " Donec rutrum congue leo eget malesuada."
-                  " Pellentesque in ipsum id orci porta dapibus.",
+              '${widget.produto.descricao}',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w300,
@@ -196,22 +191,20 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
             SizedBox(height: 20.0),
 
+            comments.length > 0 ?
             ListView.builder(
               shrinkWrap: true,
               primary: false,
               physics: NeverScrollableScrollPhysics(),
               itemCount: comments == null?0:comments.length,
               itemBuilder: (BuildContext context, int index) {
-                Map comment = comments[index];
                 return ListTile(
                     leading: CircleAvatar(
                       radius: 25.0,
-                      backgroundImage: AssetImage(
-                        "${comment['img']}",
-                      ),
+                      backgroundImage: NetworkImage(comments[index].pessoa.url_perfil),
                     ),
 
-                    title: Text("${comment['name']}"),
+                    title: Text("${comments[index].pessoa.nome}"),
                     subtitle: Column(
                       children: <Widget>[
                         Row(
@@ -220,12 +213,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                               starCount: 5,
                               color: Constants.ratingBG,
                               allowHalfRating: true,
-                              rating: 5.0,
+                              rating: comments[index].rate,
                               size: 12.0,
                             ),
                             SizedBox(width: 6.0),
                             Text(
-                              "February 14, 2020",
+                              "${comments[index].dt_lanct.toDate()}",
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w300,
@@ -236,20 +229,18 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                         SizedBox(height: 7.0),
                         Text(
-                          "${comment["comment"]}",
+                          "${comments[index].descricao}",
                         ),
                       ],
                     ),
                 );
               },
-            ),
-
+            ) :
+            SizedBox(height: 10.0),
             SizedBox(height: 10.0),
           ],
         ),
       ),
-
-
 
       bottomNavigationBar: Container(
         height: 50.0,

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_ui_kit/model/categoria.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/screens/notifications.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
 import 'package:restaurant_ui_kit/widgets/badge.dart';
 import 'package:restaurant_ui_kit/widgets/grid_product.dart';
 import 'package:restaurant_ui_kit/widgets/home_category.dart';
@@ -19,12 +19,37 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   List<Categoria> categories = new List<Categoria>();
+  List<Produto> produtos = new List<Produto>();
+
   bool possuiServico = false;
 
   @override
   void initState() {
     super.initState();
     getCategorias();
+    getProdutos();
+
+  }
+
+  getProdutos() async {
+    try {
+      produtos.clear();
+      await Firestore.instance
+          .collection("produtos")
+          .where('categoriaID', isEqualTo: widget.categoriaSeleted.documentID)
+          .getDocuments()
+          .then((querySnapshot) {
+        querySnapshot.documents.forEach((f) {
+          setState(() {
+            f.data["documentID"] = f.documentID;
+            produtos.add(Produto.fromJson(f.data));
+            print(produtos);
+          });
+        });
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {}
+    }
   }
 
   getCategorias() async {
@@ -135,19 +160,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 childAspectRatio: MediaQuery.of(context).size.width /
                     (MediaQuery.of(context).size.height / 1.25),
               ),
-              itemCount: foods == null ? 0 :foods.length,
+              itemCount: produtos == null ? 0 : produtos.length,
               itemBuilder: (BuildContext context, int index) {
-                Map food = foods[index];
                 return GridProduct(
-                  img: food['img'],
+                  img: produtos[index].url_imagem,
                   isFav: false,
-                  name: food['name'],
+                  name: produtos[index].nome,
                   rating: 5.0,
                   raters: 23,
                 );
               },
             ),
-
           ],
         ),
       ),

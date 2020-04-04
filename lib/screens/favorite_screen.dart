@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
+import 'package:flutter/services.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/widgets/grid_product.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -8,6 +10,34 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAliveClientMixin<FavoriteScreen>{
+  List<Produto> produtos = new List<Produto>();
+
+  @override
+  void initState() {
+    super.initState();
+    getProdutos();
+  }
+
+  getProdutos() async{
+    try {
+      produtos.clear();
+      await Firestore.instance
+          .collection("produtos")
+          .getDocuments()
+          .then((querySnapshot) {
+        querySnapshot.documents.forEach((f) {
+          setState(() {
+            f.data["documentID"] = f.documentID;
+            produtos.add(Produto.fromJson(f.data));
+            print(produtos);
+          });
+        });
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {}
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -35,16 +65,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAlive
                 childAspectRatio: MediaQuery.of(context).size.width /
                     (MediaQuery.of(context).size.height / 1.25),
               ),
-              itemCount: foods == null ? 0 :foods.length,
+              itemCount: produtos == null ? 0 :produtos.length,
               itemBuilder: (BuildContext context, int index) {
-//                Food food = Food.fromJson(foods[index]);
-                Map food = foods[index];
-//                print(foods);
-//                print(foods.length);
                 return GridProduct(
-                  img: food['img'],
+                  img: produtos[index].url_imagem,
                   isFav: true,
-                  name: food['name'],
+                  name: produtos[index].nome,
                   rating: 5.0,
                   raters: 23,
                 );

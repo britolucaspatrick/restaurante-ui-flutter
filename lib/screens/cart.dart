@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_ui_kit/model/carrinhoUser.dart';
 import 'package:restaurant_ui_kit/screens/checkout.dart';
-import 'package:restaurant_ui_kit/util/const.dart';
-import 'package:restaurant_ui_kit/util/foods.dart';
 import 'package:restaurant_ui_kit/widgets/cart_item.dart';
-import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -11,6 +9,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> with AutomaticKeepAliveClientMixin<CartScreen >{
+  CarrinhoUser carrinho = new CarrinhoUser();
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -18,16 +18,12 @@ class _CartScreenState extends State<CartScreen> with AutomaticKeepAliveClientMi
       body: Padding(
         padding: EdgeInsets.fromLTRB(10.0,0,10.0,0),
         child: ListView.builder(
-          itemCount: foods == null ? 0 :foods.length,
+          itemCount: carrinho.prodCarrinho == null ? 0 :carrinho.prodCarrinho.length,
           itemBuilder: (BuildContext context, int index) {
-//                Food food = Food.fromJson(foods[index]);
-            Map food = foods[index];
-//                print(foods);
-//                print(foods.length);
             return CartItem(
-              img: food['img'],
+              img: carrinho.prodCarrinho[index].url_imagem,
               isFav: false,
-              name: food['name'],
+              name: carrinho.prodCarrinho[index].nome,
               rating: 5.0,
               raters: 23,
             );
