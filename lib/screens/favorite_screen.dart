@@ -29,7 +29,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAlive
           setState(() {
             f.data["documentID"] = f.documentID;
             produtos.add(Produto.fromJson(f.data));
-            print(produtos);
           });
         });
       });
@@ -67,13 +66,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAlive
               ),
               itemCount: produtos == null ? 0 :produtos.length,
               itemBuilder: (BuildContext context, int index) {
-                return GridProduct(
-                  img: produtos[index].url_imagem,
-                  isFav: true,
-                  name: produtos[index].nome,
-                  rating: 5.0,
-                  raters: 23,
-                );
+                return GridProduct(producto: produtos[index],);
               },
             ),
 

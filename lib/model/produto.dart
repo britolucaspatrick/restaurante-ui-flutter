@@ -1,8 +1,6 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Produto{
+class Produto {
   String documentID;
   String descricao;
   bool isOferta;
@@ -13,8 +11,8 @@ class Produto{
   double vl_unitario;
   String categoriaID;
 
-  bool isFav;
-  double rating;
+  bool isFav = false;
+  double rating = 5;
 
   Produto({
     this.documentID,
@@ -59,5 +57,34 @@ class Produto{
 
   factory Produto.fromDocument(DocumentSnapshot doc) {
     return Produto.fromJson(doc.data);
+  }
+}
+
+class ProductCarrinho {
+  int qtd;
+  double vl_unitario;
+
+  ProductCarrinho({
+    this.qtd,
+    this.vl_unitario
+  });
+
+  Map<String, Object> toJson() {
+    return {
+      'vl_unitario': vl_unitario,
+      'qtd': qtd,
+    };
+  }
+
+  factory ProductCarrinho.fromJson(Map<String, Object> doc) {
+    ProductCarrinho prod = new ProductCarrinho(
+      vl_unitario: doc['vl_unitario'],
+      qtd: doc['qtd'],
+    );
+    return prod;
+  }
+
+  factory ProductCarrinho.fromDocument(DocumentSnapshot doc) {
+    return ProductCarrinho.fromJson(doc.data);
   }
 }

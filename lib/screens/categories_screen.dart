@@ -162,13 +162,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
               itemCount: produtos == null ? 0 : produtos.length,
               itemBuilder: (BuildContext context, int index) {
-                return GridProduct(
-                  img: produtos[index].url_imagem,
-                  isFav: false,
-                  name: produtos[index].nome,
-                  rating: 5.0,
-                  raters: 23,
-                );
+                return GridProduct(producto: produtos[index],);
               },
             ),
           ],

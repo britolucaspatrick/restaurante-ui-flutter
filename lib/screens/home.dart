@@ -18,6 +18,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
   List<Categoria> categories = new List<Categoria>();
   List<Produto> produtos = new List<Produto>();
+  List<Produto> produtosPopular = new List<Produto>();
   bool possuiServico = false;
 
   List<T> map<T>(List list, Function handler) {
@@ -50,7 +51,20 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
           setState(() {
             f.data["documentID"] = f.documentID;
             produtos.add(Produto.fromJson(f.data));
-            print(produtos);
+          });
+        });
+      });
+
+      produtosPopular.clear();
+      await Firestore.instance
+          .collection("produtos")
+          .limit(10)
+          .getDocuments()
+          .then((querySnapshot) {
+        querySnapshot.documents.forEach((f) {
+          setState(() {
+            f.data["documentID"] = f.documentID;
+            produtosPopular.add(Produto.fromJson(f.data));
           });
         });
       });
@@ -214,26 +228,24 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
               ],
             ),
             SizedBox(height: 10.0),
-            GridView.builder(
-              shrinkWrap: true,
-              primary: false,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 1.25),
+            Wrap(children: <Widget>[
+              GridView.builder(
+                shrinkWrap: true,
+                primary: false,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.25),
+                ),
+                itemCount: produtosPopular == null ? 0 : produtosPopular.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GridProduct(producto: produtosPopular[index],);
+                },
               ),
-              itemCount: produtos == null ? 0 : produtos.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GridProduct(
-                  img: produtos[index].url_imagem,
-                  isFav: false,
-                  name: produtos[index].nome,
-                  rating: 5.0,
-                  raters: 23,
-                );
-              },
+            ],
             ),
+
             SizedBox(height: 30),
           ],
         ),

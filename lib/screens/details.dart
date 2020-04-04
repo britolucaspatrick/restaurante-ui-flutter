@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_ui_kit/model/avaliacoesProduto.dart';
 import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/screens/notifications.dart';
+import 'package:restaurant_ui_kit/screens/productpage.dart';
 import 'package:restaurant_ui_kit/util/const.dart';
 import 'package:restaurant_ui_kit/widgets/badge.dart';
 import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
@@ -252,7 +253,15 @@ class _ProductDetailsState extends State<ProductDetails> {
             ),
           ),
           color: Theme.of(context).accentColor,
-          onPressed: (){},
+          onPressed: (){
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context){
+                  return ProductPage(productData: widget.produto,);
+                },
+              ),
+            );
+          },
         ),
       ),
     );

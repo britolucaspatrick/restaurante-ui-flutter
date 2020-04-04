@@ -129,7 +129,6 @@ class _CheckoutState extends State<Checkout> {
               itemBuilder: (BuildContext context, int index) {
                 return CartItem(
                   img: carrinho.prodCarrinho[index].url_imagem,
-                  isFav: false,
                   name: carrinho.prodCarrinho[index].nome,
                   rating: 5.0,
                   raters: 23,

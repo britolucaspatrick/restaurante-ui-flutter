@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_ui_kit/shared/color.dart';
 class Constants{
 
   static String appName = "Berton Alimentos";

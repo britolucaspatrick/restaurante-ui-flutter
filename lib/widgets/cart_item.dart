@@ -6,7 +6,6 @@ import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
 class CartItem extends StatelessWidget {
   final String name;
   final String img;
-  final bool isFav;
   final double rating;
   final int raters;
 
@@ -14,7 +13,6 @@ class CartItem extends StatelessWidget {
     Key key,
     @required this.name,
     @required this.img,
-    @required this.isFav,
     @required this.rating,
     @required this.raters})
       :super(key: key);

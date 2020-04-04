@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/screens/details.dart';
 import 'package:restaurant_ui_kit/util/const.dart';
 import 'package:restaurant_ui_kit/widgets/smooth_star_rating.dart';
 
 class GridProduct extends StatelessWidget {
 
-  final String name;
-  final String img;
-  final bool isFav;
-  final double rating;
-  final int raters;
-
+  final Produto producto;
 
   GridProduct({
     Key key,
-    @required this.name,
-    @required this.img,
-    @required this.isFav,
-    @required this.rating,
-    @required this.raters})
+    @required this.producto})
       :super(key: key);
 
   @override
@@ -36,7 +28,7 @@ class GridProduct extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
-                    "$img",
+                    "${producto.url_imagem}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -53,7 +45,7 @@ class GridProduct extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(5),
                     child: Icon(
-                      isFav
+                      producto.isFav
                           ?Icons.favorite
                           :Icons.favorite_border,
                       color: Colors.red,
@@ -70,7 +62,7 @@ class GridProduct extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 2.0, top: 8.0),
             child: Text(
-              "$name",
+              "${producto.nome}",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w900,
@@ -87,12 +79,12 @@ class GridProduct extends StatelessWidget {
                   starCount: 5,
                   color: Constants.ratingBG,
                   allowHalfRating: true,
-                  rating: rating,
+                  rating: producto.rating,
                   size: 10.0,
                 ),
 
                 Text(
-                  " $rating ($raters Reviews)",
+                  "${producto.rating} " + r"R$ " + producto.vl_unitario.toString().replaceAll('.', ','),
                   style: TextStyle(
                     fontSize: 11.0,
                   ),
@@ -101,15 +93,13 @@ class GridProduct extends StatelessWidget {
               ],
             ),
           ),
-
-
         ],
       ),
       onTap: (){
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context){
-              return ProductDetails();
+              return ProductDetails(produto: producto,);
             },
           ),
         );
