@@ -60,11 +60,11 @@ class Produto {
   }
 }
 
-class ProductCarrinho {
+class QtSellCarrinho{
   int qtd;
   double vl_unitario;
 
-  ProductCarrinho({
+  QtSellCarrinho({
     this.qtd,
     this.vl_unitario
   });
@@ -76,10 +76,46 @@ class ProductCarrinho {
     };
   }
 
+  factory QtSellCarrinho.fromJson(Map<String, Object> doc) {
+    QtSellCarrinho prod = new QtSellCarrinho(
+      vl_unitario: doc['vl_unitario'],
+      qtd: doc['qtd'],
+    );
+    return prod;
+  }
+
+  factory QtSellCarrinho.fromDocument(DocumentSnapshot doc) {
+    return QtSellCarrinho.fromJson(doc.data);
+  }
+}
+
+class ProductCarrinho {
+  int qtd;
+  double vl_unitario;
+  String url_produc;
+  String nome;
+
+  ProductCarrinho({
+    this.qtd,
+    this.vl_unitario,
+    this.url_produc,
+    this.nome,
+  });
+
+  Map<String, Object> toJson() {
+    return {
+      'vl_unitario': vl_unitario,
+      'qtd': qtd,
+      'url_produc': url_produc,
+      'nome': nome,
+    };
+  }
+
   factory ProductCarrinho.fromJson(Map<String, Object> doc) {
     ProductCarrinho prod = new ProductCarrinho(
       vl_unitario: doc['vl_unitario'],
       qtd: doc['qtd'],
+      nome: doc['nome'],
     );
     return prod;
   }

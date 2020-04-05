@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_ui_kit/model/carrinhoUser.dart';
+import 'package:restaurant_ui_kit/model/produto.dart';
 import 'package:restaurant_ui_kit/widgets/cart_item.dart';
 
 class Checkout extends StatefulWidget {
@@ -8,8 +8,9 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
-  CarrinhoUser carrinho = new CarrinhoUser();
   final TextEditingController _couponlControl = new TextEditingController();
+  List<ProductCarrinho> prodCar = new List<ProductCarrinho>();
+
 
   @override
   void initState() {
@@ -125,13 +126,13 @@ class _CheckoutState extends State<Checkout> {
             ListView.builder(
               primary: false,
               shrinkWrap: true,
-              itemCount: carrinho.prodCarrinho == null ? 0 :carrinho.prodCarrinho.length,
+              itemCount: prodCar == null ? 0 :prodCar.length,
               itemBuilder: (BuildContext context, int index) {
                 return CartItem(
-                  img: carrinho.prodCarrinho[index].url_imagem,
-                  name: carrinho.prodCarrinho[index].nome,
-                  rating: 5.0,
-                  raters: 23,
+                    img: prodCar[index].url_produc.toString(),
+                    name: prodCar[index].nome.toString(),
+                    vl_unitario: prodCar[index].vl_unitario.toString().replaceAll('.', ','),
+                    qtd: prodCar[index].qtd
                 );
               },
             ),

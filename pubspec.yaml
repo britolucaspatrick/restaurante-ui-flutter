@@ -76,6 +76,7 @@ flutter:
     - assets/adduser.png
     - assets/question.png
     - assets/info.png
+    - assets/nodata.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
