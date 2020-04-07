@@ -10,6 +10,7 @@ class SliderItem extends StatelessWidget {
   final bool isFav;
   final double rating;
   final int raters;
+  final double preco;
 
 
   SliderItem({
@@ -18,6 +19,7 @@ class SliderItem extends StatelessWidget {
     @required this.img,
     @required this.isFav,
     @required this.rating,
+    @required this.preco,
     @required this.raters})
       :super(key: key);
 
@@ -66,21 +68,19 @@ class SliderItem extends StatelessWidget {
 
 
           ),
-
           Padding(
-            padding: EdgeInsets.only(bottom: 2.0, top: 8.0),
+            padding: EdgeInsets.only(bottom: 2.0, top: 8.0, left: 10),
             child: Text(
               "$name",
               style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w900,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w600,
               ),
               maxLines: 2,
             ),
           ),
-
           Padding(
-            padding: EdgeInsets.only(bottom: 5.0, top: 2.0),
+            padding: EdgeInsets.only(bottom: 5.0, top: 2.0, left: 15.0),
             child: Row(
               children: <Widget>[
                 SmoothStarRating(
@@ -92,7 +92,7 @@ class SliderItem extends StatelessWidget {
                 ),
 
                 Text(
-                  " $rating ($raters Reviews)",
+                  r" R$ " + "${preco}".replaceAll('.', ','),
                   style: TextStyle(
                     fontSize: 11.0,
                   ),
@@ -101,8 +101,6 @@ class SliderItem extends StatelessWidget {
               ],
             ),
           ),
-
-
         ],
       ),
       onTap: (){

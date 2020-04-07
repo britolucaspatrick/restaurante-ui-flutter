@@ -4,7 +4,6 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:restaurant_ui_kit/business/auth.dart';
 import 'package:restaurant_ui_kit/model/pessoa.dart';
 import 'package:restaurant_ui_kit/screens/loginpage.dart';
-import 'package:restaurant_ui_kit/widgets/SubmitButton.dart';
 import 'package:restaurant_ui_kit/widgets/alert.dart';
 import 'package:restaurant_ui_kit/widgets/entryField.dart';
 
@@ -104,7 +103,7 @@ class _ProfileState extends State<Profile> {
                           children: <Widget>[
                             InkWell(
                               onTap: (){
-                                Navigator.of(context).push(
+                                Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (BuildContext context){
                                       return LoginPage();

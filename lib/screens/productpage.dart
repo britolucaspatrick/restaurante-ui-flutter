@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_ui_kit/business/CarrinhoBusiness.dart';
 import 'package:restaurant_ui_kit/business/auth.dart';
 import 'package:restaurant_ui_kit/model/produto.dart';
-import 'package:restaurant_ui_kit/screens/cart.dart';
 import 'package:restaurant_ui_kit/screens/main_screen.dart';
 import 'package:restaurant_ui_kit/shared/buttons.dart';
 import 'package:restaurant_ui_kit/shared/styles.dart';

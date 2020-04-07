@@ -147,6 +147,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
                     name: produtos[index].nome,
                     rating: 5.0,
                     raters: 23,
+                    preco: produtos[index].vl_unitario
                   );
                 },
               ).toList(),

@@ -15,8 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
   startTimeout() {
     return  Timer(Duration(seconds: 2), changeScreen);
   }
-//
-  changeScreen() async{
+
+  changeScreen() async {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context){
